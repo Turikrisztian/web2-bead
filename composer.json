@@ -1,54 +1,93 @@
 {
-	"name": "nette/utils",
-	"description": "🛠  Nette Utils: lightweight utilities for string & array manipulation, image handling, safe JSON encoding/decoding, validation, slug or strong password generating etc.",
-	"keywords": ["nette", "images", "json", "password", "validation", "utility", "string", "array", "core", "slugify", "utf-8", "unicode", "paginator", "datetime"],
-	"homepage": "https://nette.org",
-	"license": ["BSD-3-Clause", "GPL-2.0-only", "GPL-3.0-only"],
-	"authors": [
-		{
-			"name": "David Grudl",
-			"homepage": "https://davidgrudl.com"
-		},
-		{
-			"name": "Nette Community",
-			"homepage": "https://nette.org/contributors"
-		}
-	],
-	"require": {
-		"php": "8.0 - 8.5"
-	},
-	"require-dev": {
-		"nette/tester": "^2.5",
-		"tracy/tracy": "^2.9",
-		"phpstan/phpstan-nette": "^2.0@stable",
-		"jetbrains/phpstorm-attributes": "^1.2"
-	},
-	"conflict": {
-		"nette/finder": "<3",
-		"nette/schema": "<1.2.2"
-	},
-	"suggest": {
-		"ext-iconv": "to use Strings::webalize(), toAscii(), chr() and reverse()",
-		"ext-json": "to use Nette\\Utils\\Json",
-		"ext-intl": "to use Strings::webalize(), toAscii(), normalize() and compare()",
-		"ext-mbstring": "to use Strings::lower() etc...",
-		"ext-gd": "to use Image",
-		"ext-tokenizer": "to use Nette\\Utils\\Reflection::getUseStatements()"
-	},
-	"autoload": {
-		"classmap": ["src/"],
-		"psr-4": {
-			"Nette\\": "src"
-		}
-	},
-	"minimum-stability": "dev",
-	"scripts": {
-		"phpstan": "phpstan analyse",
-		"tester": "tester tests -s"
-	},
-	"extra": {
-		"branch-alias": {
-			"dev-master": "4.0-dev"
-		}
-	}
+    "name": "nunomaduro/collision",
+    "description": "Cli error handling for console/command-line PHP applications.",
+    "keywords": ["console", "command-line", "php", "cli", "error", "handling", "laravel-zero", "laravel", "artisan", "symfony", "dev"],
+    "license": "MIT",
+    "support": {
+        "issues": "https://github.com/nunomaduro/collision/issues",
+        "source": "https://github.com/nunomaduro/collision"
+    },
+    "authors": [
+        {
+            "name": "Nuno Maduro",
+            "email": "enunomaduro@gmail.com"
+        }
+    ],
+    "require": {
+        "php": "^8.2.0",
+        "filp/whoops": "^2.18.1",
+        "nunomaduro/termwind": "^2.3.1",
+        "symfony/console": "^7.3.0"
+    },
+    "conflict": {
+        "laravel/framework": "<11.44.2 || >=13.0.0",
+        "phpunit/phpunit": "<11.5.15 || >=13.0.0"
+    },
+    "require-dev": {
+        "brianium/paratest": "^7.8.3",
+        "laravel/framework": "^11.44.2 || ^12.18",
+        "laravel/pint": "^1.22.1",
+        "laravel/tinker": "^2.10.1",
+        "laravel/sail": "^1.43.1",
+        "laravel/sanctum": "^4.1.1",
+        "larastan/larastan": "^3.4.2",
+        "orchestra/testbench-core": "^9.12.0 || ^10.4",
+        "pestphp/pest": "^3.8.2",
+        "sebastian/environment": "^7.2.1 || ^8.0"
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Tests\\Printer\\": "tests/Printer",
+            "Tests\\Unit\\": "tests/Unit",
+            "Tests\\FakeProgram\\": "tests/FakeProgram",
+            "Tests\\": "tests/LaravelApp/tests",
+            "App\\": "tests/LaravelApp/app/"
+        }
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "autoload": {
+        "psr-4": {
+            "NunoMaduro\\Collision\\": "src/"
+        },
+        "files": [
+            "./src/Adapters/Phpunit/Autoload.php"
+        ]
+    },
+    "config": {
+        "preferred-install": "dist",
+        "sort-packages": true,
+        "allow-plugins": {
+            "pestphp/pest-plugin": true
+        }
+    },
+    "extra": {
+        "laravel": {
+            "providers": [
+                "NunoMaduro\\Collision\\Adapters\\Laravel\\CollisionServiceProvider"
+            ]
+        },
+        "branch-alias": {
+            "dev-8.x": "8.x-dev"
+        }
+    },
+    "scripts": {
+        "lint": "pint -v",
+        "test:lint": "pint --test -v",
+        "test:types": "phpstan analyse --ansi",
+        "test:unit:phpunit": [
+            "@putenv XDEBUG_MODE=coverage",
+            "phpunit --colors=always"
+        ],
+        "test:unit:pest": [
+            "@putenv XDEBUG_MODE=coverage",
+            "pest --colors=always -v"
+        ],
+        "test": [
+            "@test:lint",
+            "@test:types",
+            "@test:unit:phpunit",
+            "@test:unit:pest"
+        ]
+    }
 }
