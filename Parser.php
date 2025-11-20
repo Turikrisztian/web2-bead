@@ -1,53 +1,78 @@
 <?php
 
-declare(strict_types=1);
+namespace Egulias\EmailValidator;
 
-namespace Dotenv\Parser;
+use Egulias\EmailValidator\Result\Result;
+use Egulias\EmailValidator\Result\ValidEmail;
+use Egulias\EmailValidator\Result\InvalidEmail;
+use Egulias\EmailValidator\Result\Reason\ExpectingATEXT;
 
-use Dotenv\Exception\InvalidFileException;
-use Dotenv\Util\Regex;
-use GrahamCampbell\ResultType\Result;
-use GrahamCampbell\ResultType\Success;
-
-final class Parser implements ParserInterface
+abstract class Parser
 {
     /**
-     * Parse content into an entry array.
-     *
-     * @param string $content
-     *
-     * @throws \Dotenv\Exception\InvalidFileException
-     *
-     * @return \Dotenv\Parser\Entry[]
+     * @var Warning\Warning[]
      */
-    public function parse(string $content)
+    protected $warnings = [];
+
+    /**
+     * @var EmailLexer
+     */
+    protected $lexer;
+
+    /**
+     * id-left "@" id-right
+     */
+    abstract protected function parseRightFromAt(): Result;
+    abstract protected function parseLeftFromAt(): Result;
+    abstract protected function preLeftParsing(): Result;
+
+
+    public function __construct(EmailLexer $lexer)
     {
-        return Regex::split("/(\r\n|\n|\r)/", $content)->mapError(static function () {
-            return 'Could not split into separate lines.';
-        })->flatMap(static function (array $lines) {
-            return self::process(Lines::process($lines));
-        })->mapError(static function (string $error) {
-            throw new InvalidFileException(\sprintf('Failed to parse dotenv file. %s', $error));
-        })->success()->get();
+        $this->lexer = $lexer;
+    }
+
+    public function parse(string $str): Result
+    {
+        $this->lexer->setInput($str);
+
+        if ($this->lexer->hasInvalidTokens()) {
+            return new InvalidEmail(new ExpectingATEXT("Invalid tokens found"), $this->lexer->current->value);
+        }
+
+        $preParsingResult = $this->preLeftParsing();
+        if ($preParsingResult->isInvalid()) {
+            return $preParsingResult;
+        }
+
+        $localPartResult = $this->parseLeftFromAt();
+
+        if ($localPartResult->isInvalid()) {
+            return $localPartResult;
+        }
+
+        $domainPartResult = $this->parseRightFromAt();
+
+        if ($domainPartResult->isInvalid()) {
+            return $domainPartResult;
+        }
+
+        return new ValidEmail();
     }
 
     /**
-     * Convert the raw entries into proper entries.
-     *
-     * @param string[] $entries
-     *
-     * @return \GrahamCampbell\ResultType\Result<\Dotenv\Parser\Entry[], string>
+     * @return Warning\Warning[]
      */
-    private static function process(array $entries)
+    public function getWarnings(): array
     {
-        /** @var \GrahamCampbell\ResultType\Result<\Dotenv\Parser\Entry[], string> */
-        return \array_reduce($entries, static function (Result $result, string $raw) {
-            return $result->flatMap(static function (array $entries) use ($raw) {
-                return EntryParser::parse($raw)->map(static function (Entry $entry) use ($entries) {
-                    /** @var \Dotenv\Parser\Entry[] */
-                    return \array_merge($entries, [$entry]);
-                });
-            });
-        }, Success::create([]));
+        return $this->warnings;
+    }
+
+    protected function hasAtToken(): bool
+    {
+        $this->lexer->moveNext();
+        $this->lexer->moveNext();
+
+        return !$this->lexer->current->isA(EmailLexer::S_AT);
     }
 }
