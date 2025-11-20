@@ -1,39 +1,34 @@
 {
-    "name": "brick/math",
-    "description": "Arbitrary-precision arithmetic library",
-    "type": "library",
-    "keywords": [
-        "Brick",
-        "Math",
-        "Mathematics",
-        "Arbitrary-precision",
-        "Arithmetic",
-        "BigInteger",
-        "BigDecimal",
-        "BigRational",
-        "BigNumber",
-        "Bignum",
-        "Decimal",
-        "Rational",
-        "Integer"
-    ],
-    "license": "MIT",
-    "require": {
-        "php": "^8.2"
+  "name": "phar-io/version",
+  "description": "Library for handling version information and constraints",
+  "license": "BSD-3-Clause",
+  "authors": [
+    {
+      "name": "Arne Blankerts",
+      "email": "arne@blankerts.de",
+      "role": "Developer"
     },
-    "require-dev": {
-        "phpunit/phpunit": "^11.5",
-        "php-coveralls/php-coveralls": "^2.2",
-        "phpstan/phpstan": "2.1.22"
+    {
+      "name": "Sebastian Heuer",
+      "email": "sebastian@phpeople.de",
+      "role": "Developer"
     },
-    "autoload": {
-        "psr-4": {
-            "Brick\\Math\\": "src/"
-        }
-    },
-    "autoload-dev": {
-        "psr-4": {
-            "Brick\\Math\\Tests\\": "tests/"
-        }
+    {
+      "name": "Sebastian Bergmann",
+      "email": "sebastian@phpunit.de",
+      "role": "Developer"
     }
+  ],
+  "support": {
+    "issues": "https://github.com/phar-io/version/issues"
+  },
+  "require": {
+    "php": "^7.2 || ^8.0"
+  },
+  "autoload": {
+    "classmap": [
+      "src/"
+    ]
+  }
 }
+
