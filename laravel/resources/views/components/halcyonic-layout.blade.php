@@ -1,0 +1,1 @@
+{{-- Deprecated wrapper component (previously Halcyonic). Intentionally left blank. --}}

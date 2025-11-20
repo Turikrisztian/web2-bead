@@ -1,0 +1,1 @@
+{{-- Deprecated layout (previously external theme). Intentionally left blank. --}}
