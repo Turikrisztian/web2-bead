@@ -2,20 +2,11 @@
 
 declare(strict_types=1);
 
-/*
- * This file is a part of dflydev/dot-access-data.
- *
- * (c) Dragonfly Development Inc.
- *
- * For the full copyright and license information, please view the LICENSE
- * file that was distributed with this source code.
- */
+namespace Dotenv\Exception;
 
-namespace Dflydev\DotAccessData\Exception;
+use InvalidArgumentException;
 
-/**
- * Thrown when trying to access an invalid path in the data array
- */
-class InvalidPathException extends DataException
+final class InvalidPathException extends InvalidArgumentException implements ExceptionInterface
 {
+    //
 }
